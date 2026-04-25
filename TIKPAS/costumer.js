@@ -1,70 +1,60 @@
-tailwind.config = {
-    darkMode: "class",
-    theme: {
-        extend: {
-            "colors": {
-                "on-primary": "#63003d",
-                "surface-bright": "#37393a",
-                "primary": "#ffb0d0",
-                "surface-container-highest": "#333535",
-                "tertiary-container": "#9998e0",
-                "outline": "#a48a93",
-                "on-secondary-container": "#86c5d6",
-                "surface-container-lowest": "#0c0f0f",
-                "background": "#121414",
-                "on-primary-fixed": "#3d0024",
-                "primary-container": "#ff69b4",
-                "on-tertiary-fixed": "#131053",
-                "surface-container": "#1e2020",
-                "tertiary-fixed": "#e2dfff",
-                "secondary-fixed": "#adedfe",
-                "on-background": "#e2e2e2",
-                "on-tertiary-fixed-variant": "#403f80",
-                "error": "#ffb4ab",
-                "on-primary-fixed-variant": "#8c0058",
-                "secondary-container": "#005361",
-                "on-secondary-fixed": "#001f26",
-                "surface-container-low": "#1a1c1c",
-                "secondary-fixed-dim": "#91d0e1",
-                "surface-tint": "#ffb0d0",
-                "on-primary-container": "#6e0044",
-                "outline-variant": "#564149",
-                "inverse-surface": "#e2e2e2",
-                "secondary": "#91d0e1",
-                "primary-fixed-dim": "#ffb0d0",
-                "on-tertiary-container": "#2f2e6e",
-                "on-secondary": "#003640",
-                "surface-container-high": "#282a2b",
-                "surface": "#121414",
-                "inverse-primary": "#ac2471",
-                "on-tertiary": "#292868",
-                "on-error": "#690005",
-                "primary-fixed": "#ffd8e6",
-                "on-secondary-fixed-variant": "#004e5c",
-                "surface-dim": "#121414",
-                "tertiary": "#c2c1ff",
-                "on-surface-variant": "#dcbfc9",
-                "error-container": "#93000a",
-                "on-error-container": "#ffdad6",
-                "tertiary-fixed-dim": "#c2c1ff",
-                "surface-variant": "#333535",
-                "on-surface": "#e2e2e2",
-                "inverse-on-surface": "#2f3131"
-            },
-            "borderRadius": {
-                "DEFAULT": "0.25rem",
-                "lg": "0.5rem",
-                "xl": "0.75rem",
-                "full": "9999px"
-            },
-            "fontFamily": {
-                "body-md": ["Be Vietnam Pro"],
-                "headline-lg": ["Space Grotesk"],
-                "display-xl": ["Space Grotesk"],
-                "body-lg": ["Be Vietnam Pro"],
-                "headline-md": ["Space Grotesk"],
-                "label-bold": ["Space Grotesk"]
-            }
-        }
-    }
+/**
+ * Logic điều khiển Modal Sự kiện
+ */
+const modal = document.getElementById('eventModal');
+const content = document.getElementById('modalContent');
+
+/**
+ * Mở modal và cập nhật thông tin động
+ * @param {string} title - Tên sự kiện
+ * @param {string} img - Link ảnh sơ đồ
+ * @param {string} ticket - Các loại vé
+ * @param {string} price - Giá vé
+ * @param {string} time - Thời gian
+ * @param {string} loc - Địa điểm
+ */
+function openEventModal(title, img, ticket, price, time, loc) {
+    // Cập nhật nội dung vào các thẻ ID
+    document.getElementById('modalTitle').innerText = title;
+    document.getElementById('modalSeatMap').src = img;
+    document.getElementById('modalTicketClass').innerText = ticket;
+    document.getElementById('modalPrice').innerText = price;
+    document.getElementById('modalTime').innerText = time;
+    document.getElementById('modalLocation').innerText = loc;
+
+    // Hiển thị modal với hiệu ứng
+    modal.classList.remove('hidden');
+    
+    // Sử dụng setTimeout để trình duyệt kịp render trạng thái hidden trước khi chạy transition
+    setTimeout(() => {
+        modal.classList.add('opacity-100');
+        content.style.transform = 'scale(1)';
+    }, 10);
 }
+
+/**
+ * Đóng modal và reset hiệu ứng
+ */
+function closeEventModal() {
+    modal.classList.remove('opacity-100');
+    content.style.transform = 'scale(0.9)';
+    
+    // Đợi hiệu ứng transition kết thúc (300ms) rồi mới ẩn hoàn toàn
+    setTimeout(() => {
+        modal.classList.add('hidden');
+    }, 300);
+}
+
+// Đóng modal khi người dùng click ra vùng bên ngoài (overlay)
+modal.addEventListener('click', (e) => {
+    if (e.target === modal) {
+        closeEventModal();
+    }
+});
+
+// Hỗ trợ đóng modal bằng phím ESC để tăng trải nghiệm người dùng
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+        closeEventModal();
+    }
+});
